@@ -12,6 +12,12 @@
 
 ## Setup
 
+### Env
+
+- VSC
+- PlatformIO
+- Teensy 3.6
+
 ### Set latency
 
 `#define LATENCY_MICROS 10000`
