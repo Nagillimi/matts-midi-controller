@@ -1,17 +1,6 @@
 #include <Arduino.h>
 #include "synth.h"
 
-/**
- * @brief Sampling latency in microseconds
- * 
- * Piano fNyq ~= 20Hz
- * 
- * 150Hz =  6,667us
- * 100Hz = 10,000us
- * 50Hz  = 20,000us
- */
-#define LATENCY_MICROS 10000
-
 #ifdef TEENSY
     MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI1);
 #endif
