@@ -5,10 +5,11 @@
 #include <WString.h>
 #include "synthKey.h"
 #include "octaveKey.h"
+#include "constants.h"
 
 class Synth {
 private:
-    uint8_t octaveSetting;
+    int8_t octaveSetting;
     uint8_t midiChannel;
     uint8_t midiLowestNote;
     uint8_t midiLowestControlChange;
@@ -24,7 +25,7 @@ public:
     );
     void scan();
     void process();
-    void emit();
+    void emit(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi);
     String print();
 };
 
