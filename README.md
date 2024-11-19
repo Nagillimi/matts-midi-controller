@@ -1,4 +1,4 @@
-# MIDI Digital Pin Scanner
+# Custom MIDI Controller
 
 ## Goals
 
@@ -6,8 +6,8 @@
 - [x] octave pitch multiplier
 - [x] MIDI output
   - [x] teensy
-  - [ ] arduino
-- [ ] misc buttons and knobs for extra MIDI configs
+  - [x] arduino
+- [x] misc buttons and knobs for extra MIDI configs
 - [ ] update current key state if octave is pressed while sustained
 
 ## Setup
