@@ -33,7 +33,6 @@ private:
 
 public:
     Controller(
-        String synthKeyList[12],
         uint8_t synthPinList[12],
         DirectionState octaveKeyList[2],
         uint8_t octavePinList[2],

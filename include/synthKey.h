@@ -7,12 +7,10 @@
 
 class SynthKey: public InputKey {
 private:
-    String note;
     uint8_t pitch;
 
 public:
     SynthKey(
-        String const &_note,
         uint8_t const &_pin,
         uint8_t const &_pitch
     );

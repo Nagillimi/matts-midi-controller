@@ -1,8 +1,8 @@
 #include "octaveKey.h"
 
 OctaveKey::OctaveKey(
-    DirectionState const & _direction,
-    uint8_t const &_pin
+    uint8_t const &_pin,
+    DirectionState const & _direction
 ) : InputKey(_pin) {
     direction = _direction;
 }

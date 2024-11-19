@@ -12,8 +12,8 @@ private:
 
 public:
     OctaveKey(
-        DirectionState const & _direction,
-        uint8_t const &_pin
+        uint8_t const &_pin,
+        DirectionState const & _direction
     );
 
     DirectionState getDirection();

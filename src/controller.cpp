@@ -1,7 +1,6 @@
 #include "controller.h"
 
 Controller::Controller(
-    String synthKeyList[12],
     uint8_t synthPinList[12],
     DirectionState octaveKeyList[2],
     uint8_t octavePinList[2],
@@ -24,11 +23,11 @@ Controller::Controller(
     // pin setup
     uint8_t i;
     for (i = 0; i < 12; i++) {
-        synthKeys[i] = new SynthKey(synthKeyList[i], synthPinList[i], MIDDLE_C + i);
+        synthKeys[i] = new SynthKey(synthPinList[i], MIDDLE_C + i);
     }
   
     for (i = 0; i < 2; i++) {
-        octaveKeys[i] = new OctaveKey(octaveKeyList[i], octavePinList[i]);
+        octaveKeys[i] = new OctaveKey(octavePinList[i], octaveKeyList[i]);
     }
 
     for (i = 0; i < 4; i++) {

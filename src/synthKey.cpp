@@ -1,11 +1,9 @@
 #include "synthKey.h"
 
 SynthKey::SynthKey(
-    String const &_note,
-    uint8_t const &_pin,
-    uint8_t const &_pitch
+    uint8_t const &_pitch,
+    uint8_t const &_pin
 ) : InputKey(_pin) {
-    note = _note;
     pitch = _pitch;
 }
 
