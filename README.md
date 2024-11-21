@@ -8,7 +8,7 @@
   - [x] teensy
   - [x] arduino
 - [x] misc buttons and knobs for extra MIDI configs
-- [ ] update current key state if octave is pressed while sustained
+- [x] update current key state if octave is pressed while sustained
 
 ## Setup
 

@@ -99,14 +99,39 @@ void Controller::emitSynthKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSeri
         }
 
         const uint8_t correctedPitch = synthKey->getPitch() + 12 * octaveSetting;
+
+        // list of pitches belonging to the note on all octaves
+        const uint8_t rootPitch = correctedPitch % 12;
+        uint8_t pitches[10];
+        for (uint8_t i = 0; i < 10; i++) { // [0C, 108C]
+            pitches[i] = rootPitch + 12 * i;
+        }
 #ifdef TEENSY
-        isPressed
-            ? midi.sendNoteOn(correctedPitch, 99, midiChannel)
-            : midi.sendNoteOff(correctedPitch, 0, midiChannel);
+        if (isReleased) {
+            for (auto pitch : pitches) {
+                midi.sendNoteOff(pitch, 0, midiChannel);
+            }
+            return;
+        }
+        midi.sendNoteOn(correctedPitch, 99, midiChannel);
 #else
         const uint8_t header = isPressed ? 0x09 : 0x08;
         const uint8_t byte1 = isPressed ? 0x90 : 0x80;
         const uint8_t velocity = isPressed ? 127 : 0;
+
+        if (isReleased) {
+            for (auto pitch : pitches) {
+                midiEventPacket_t event = {
+                    (uint8_t)(header),
+                    (uint8_t)(byte1 | channel),
+                    (uint8_t)(pitch),
+                    (uint8_t)(velocity)
+                };
+
+                MidiUSB.sendMIDI(event);
+            }
+            return;
+        }
 
         midiEventPacket_t event = {
             (uint8_t)(header),
