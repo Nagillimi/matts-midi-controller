@@ -1,21 +1,9 @@
 #include <Arduino.h>
-#include "controller.h"
+#include "config.h"
 
 #ifdef TEENSY
     MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI1);
 #endif
-
-// assumes sequence        [C, C#, D, D#, E, F, F#, G, G#, A, A#, B]
-uint8_t synthPinList[12] = {1, 39, 2, 38, 3, 4,  5, 6,  7, 8, 9, 10};
-
-DirectionState octaveKeyList[2] = {UP, DOWN};
-uint8_t octavePinList[2] = {36, 37};
-
-uint8_t programControlSettingList[4] = {1, 2, 3, 4};
-uint8_t programPinList[4] = {32, 33, 34, 35};
-
-uint8_t potControlSettingList[4] = {1, 2, 3, 4};
-uint8_t potPinList[4] = {32, 33, 34, 35};
 
 Controller *controller;
 

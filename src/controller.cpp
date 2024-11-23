@@ -80,7 +80,7 @@ void Controller::emit(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi
     emitProgramKeys(midi);
     emitPots(midi);
 
-    // ignore incoming MIDI messages
+    // ignore incoming MIDI messages, could perform tasks in the future
 #ifdef TEENSY
     while (midi.read());
 #else
@@ -98,7 +98,7 @@ void Controller::emitSynthKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSeri
             continue;
         }
 
-        const uint8_t correctedPitch = synthKey->getPitch() + 12 * octaveSetting;
+        const uint8_t correctedPitch = synthKey->getPitch() + 12 * octaveSetting; 
 
         // list of pitches belonging to the note on all octaves
         const uint8_t rootPitch = correctedPitch % 12;
@@ -156,10 +156,11 @@ void Controller::emitProgramKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSe
         }
 
 #ifdef TEENSY
-        // TODO: how to emit program buttons
-        // isPressed
-        //     ? midi.sendNoteOn(correctedPitch, 99, midiChannel)
-        //     : midi.sendNoteOff(correctedPitch, 0, midiChannel);
+        midi.sendControlChange(
+            programKey->getControlSetting(),
+            programKey->getSignal(),
+            midiChannel
+        );
 #else
         const uint8_t header = isPressed ? 0x09 : 0x08;
         const uint8_t byte1 = isPressed ? 0x90 : 0x80;
@@ -183,7 +184,11 @@ void Controller::emitPots(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> 
             continue;
         }
 #ifdef TEENSY
-    midi.sendControlChange(pot->getControlSetting(), pot->getSignal(), midiChannel);
+        midi.sendControlChange(
+            pot->getControlSetting(),
+            pot->getSignal(),
+            midiChannel
+        );
 #else
         midiEventPacket_t event = {
             (uint8_t)(0x0B),
