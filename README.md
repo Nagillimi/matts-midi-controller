@@ -29,13 +29,13 @@ In `constants.h`:
 In `config.h`:
 
 ```cpp
-uint8_t synthPinList[12] = {1, 39, 2, 38, 3, 4,  5, 6,  7, 8, 9, 10};
+uint8_t synthPinList[12] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 DirectionState octaveKeyList[2] = {UP, DOWN};
-uint8_t octavePinList[2] = {36, 37};
+uint8_t octavePinList[2] = {14, 15};
 uint8_t programControlSettingList[4] = {1, 2, 3, 4};
-uint8_t programPinList[4] = {32, 33, 34, 35};
+uint8_t programPinList[4] = {16, 17, 18, 19};
 uint8_t potControlSettingList[4] = {1, 2, 3, 4};
-uint8_t potPinList[4] = {32, 33, 34, 35};
+uint8_t potPinList[4] = {A6, A7, A8, A9};
 ```
 
 Hardware requirements:
@@ -44,7 +44,11 @@ Hardware requirements:
 - 4 analog pins
 - Serial
 
+Schematic with MIDI on Serial1 (teensy 4.0):
+
 ![ ](/schematic/v1.png)
+
+If using USB Serial (D-/D+) for MIDI, omit the MIDI connector.
 
 ## MIDI Pitch Definitions
 
