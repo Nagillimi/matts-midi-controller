@@ -46,8 +46,6 @@
 #define MAX_OCTAVE_SETTING 7
 #define MIN_OCTAVE_SETTING -2
 
-#define MIN_MIDI_CONTROL_SETTING 1
-
 /**
  * @brief Analog threhold, [0, 1023] ADC
  */
