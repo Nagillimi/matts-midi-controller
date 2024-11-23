@@ -46,6 +46,8 @@ Hardware requirements:
 
 Schematic with MIDI on Serial1 (teensy 4.0):
 
+- all buttons/switches are NO
+
 ![ ](/schematic/v1.png)
 
 If using USB Serial (D-/D+) for MIDI, omit the MIDI connector.
