@@ -40,7 +40,7 @@ void loop() {
 
     controller->scan();
     controller->process();
-    // controller->emit(MIDI1);
+    controller->emit(MIDI1);
     Serial.println(controller->print());
 
     digitalWrite(LED_BUILTIN, LOW);
