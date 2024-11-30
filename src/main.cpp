@@ -23,7 +23,8 @@ void setup() {
         programControlSettingList,
         programPinList,
         potControlSettingList,
-        potPinList
+        potPinList,
+        volumePin
     );
 
     while (!Serial);

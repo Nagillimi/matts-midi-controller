@@ -1,13 +1,14 @@
 #include "controller.h"
 
 Controller::Controller(
-    uint8_t synthPinList[12],
-    DirectionState octaveKeyList[2],
-    uint8_t octavePinList[2],
-    uint8_t programControlSettingList[4],
-    uint8_t programPinList[4],
-    uint8_t potControlSettingList[4],
-    uint8_t potPinList[4]
+    uint8_t synthPinList[SYNTH_COUNT],
+    DirectionState octaveKeyList[OCT_COUNT],
+    uint8_t octavePinList[OCT_COUNT],
+    uint8_t programControlSettingList[PRG_COUNT],
+    uint8_t programPinList[PRG_COUNT],
+    uint8_t potControlSettingList[POT_COUNT],
+    uint8_t potPinList[POT_COUNT],
+    uint8_t volumePin
 ) {
     octaveSetting = 0;
 
@@ -22,21 +23,23 @@ Controller::Controller(
 
     // pin setup
     uint8_t i;
-    for (i = 0; i < 12; i++) {
-        synthKeys[i] = new SynthKey(synthPinList[i], MIDDLE_C + i);
+    for (i = 0; i < SYNTH_COUNT; i++) {
+        synthKeys[i] = new SynthKey(synthPinList[i], FIRST_C + i);
     }
   
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < OCT_COUNT; i++) {
         octaveKeys[i] = new OctaveKey(octavePinList[i], octaveKeyList[i]);
     }
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < PRG_COUNT; i++) {
         programKeys[i] = new ControlKey(programPinList[i], programControlSettingList[i]);
     }
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < POT_COUNT; i++) {
         pots[i] = new Pot(potPinList[i], potControlSettingList[i]);
     }
+
+    slide = new Pot(volumePin, MIDI_NAMESPACE::ChannelVolume); // 7
 }
 
 void Controller::scan() {
@@ -55,6 +58,8 @@ void Controller::scan() {
     for (auto pot : pots) {
         pot->measure();
     }
+
+    slide->measure();
 }
 
 void Controller::process() {
@@ -79,6 +84,7 @@ void Controller::emit(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi
     emitSynthKeys(midi);
     emitProgramKeys(midi);
     emitPots(midi);
+    emitSlide(midi);
 
     // ignore incoming MIDI messages, could perform tasks in the future
 #ifdef TEENSY
@@ -98,13 +104,13 @@ void Controller::emitSynthKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSeri
             continue;
         }
 
-        const uint8_t correctedPitch = synthKey->getPitch() + 12 * octaveSetting; 
+        const uint8_t correctedPitch = synthKey->getPitch() + SYNTH_COUNT * octaveSetting; 
 
         // list of pitches belonging to the note on all octaves
-        const uint8_t rootPitch = correctedPitch % 12;
-        uint8_t pitches[10];
-        for (uint8_t i = 0; i < 10; i++) { // [0C, 108C]
-            pitches[i] = rootPitch + 12 * i;
+        const uint8_t rootPitch = correctedPitch % SYNTH_COUNT;
+        uint8_t pitches[RANGE_OCTAVES];
+        for (uint8_t i = 0; i < RANGE_OCTAVES; i++) {
+            pitches[i] = rootPitch + SYNTH_COUNT * i;
         }
 #ifdef TEENSY
         if (isReleased) {
@@ -203,11 +209,34 @@ void Controller::emitPots(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> 
     }
 }
 
+void Controller::emitSlide(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi) {
+    if (slide->isStill() || slide->isWithinDebouncePeriod()) {
+        return;
+    }
+#ifdef TEENSY
+    midi.sendControlChange(
+        slide->getControlSetting(),
+        slide->getSignal(),
+        midiChannel
+    );
+#else
+    midiEventPacket_t event = {
+        (uint8_t)(0x0B),
+        (uint8_t)(0xB0 | channel),
+        (uint8_t)(slide->getControlSetting()),
+        (uint8_t)(slide->getSignal())
+    };
+
+    MidiUSB.sendMIDI(event);
+#endif
+    slide->setLastEmitTs(millis());
+}
+
 String Controller::print() {
     String ret = "KEYS: ";
     for (auto synthKey : synthKeys) {
         ret += "[";
-        ret += synthKey->getPitch() + 12 * octaveSetting;
+        ret += synthKey->getPitch() + SYNTH_COUNT * octaveSetting;
         ret += ", ";
         ret += synthKey->getSignal();
         ret += "]\t";
@@ -240,5 +269,11 @@ String Controller::print() {
         ret += "]\t";
     }
 
+    ret += "\tVOL: ";
+    ret += "[";
+    ret += slide->getControlSetting();
+    ret += ", ";
+    ret += slide->getSignal();
+    ret += "]\t";
     return ret;
 }

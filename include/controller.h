@@ -8,6 +8,7 @@
 #include "controlKey.h"
 #include "pot.h"
 #include "constants.h"
+#include "config.h"
 
 // MIDI device layer
 #ifndef TEENSY
@@ -22,24 +23,27 @@ private:
     int8_t octaveSetting;
     uint8_t midiChannel;
     uint8_t midiLowestControlChange;
-    SynthKey *synthKeys[12];
-    OctaveKey *octaveKeys[2];
-    ControlKey *programKeys[4];
-    Pot *pots[4];
+    SynthKey *synthKeys[SYNTH_COUNT];
+    OctaveKey *octaveKeys[OCT_COUNT];
+    ControlKey *programKeys[PRG_COUNT];
+    Pot *pots[POT_COUNT];
+    Pot *slide;
 
     void emitSynthKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi);
     void emitProgramKeys(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi);
     void emitPots(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi);
+    void emitSlide(midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> midi);
 
 public:
     Controller(
-        uint8_t synthPinList[12],
-        DirectionState octaveKeyList[2],
-        uint8_t octavePinList[2],
-        uint8_t programControlSettingList[4],
-        uint8_t programPinList[4],
-        uint8_t potControlSettingList[4],
-        uint8_t potPinList[4]
+        uint8_t synthPinList[SYNTH_COUNT],
+        DirectionState octaveKeyList[OCT_COUNT],
+        uint8_t octavePinList[OCT_COUNT],
+        uint8_t programControlSettingList[PRG_COUNT],
+        uint8_t programPinList[PRG_COUNT],
+        uint8_t potControlSettingList[POT_COUNT],
+        uint8_t potPinList[POT_COUNT],
+        uint8_t volumePin
     );
     void scan();
     void process();

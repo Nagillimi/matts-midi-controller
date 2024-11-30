@@ -6,7 +6,7 @@
 
 - VSC
 - PlatformIO
-- Teensy 3.6
+- Teensy 4.1 (tested on T3.6)
 
 ### Set Constants
 
@@ -29,28 +29,36 @@ In `constants.h`:
 In `config.h`:
 
 ```cpp
-uint8_t synthPinList[12] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-DirectionState octaveKeyList[2] = {UP, DOWN};
-uint8_t octavePinList[2] = {14, 15};
-uint8_t programControlSettingList[4] = {1, 2, 3, 4};
-uint8_t programPinList[4] = {16, 17, 18, 19};
-uint8_t potControlSettingList[4] = {1, 2, 3, 4};
-uint8_t potPinList[4] = {A6, A7, A8, A9};
+#define SYNTH_COUNT 24
+#define OCT_COUNT 2
+#define PRG_COUNT 4
+#define POT_COUNT 4
+
+uint8_t synthPinList[SYNTH_COUNT] = {
+     0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
+    24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
+};
+DirectionState octaveKeyList[OCT_COUNT] = {UP, DOWN};
+uint8_t octavePinList[OCT_COUNT] = {36, 37};
+uint8_t programControlSettingList[PRG_COUNT] = {1, 2, 3, 4};
+uint8_t programPinList[PRG_COUNT] = {38, 39, 40, 41};
+uint8_t potControlSettingList[POT_COUNT] = {1, 2, 3, 4};
+uint8_t potPinList[POT_COUNT] = {A0, A1, A2, A3};
+uint8_t volumePin = A4;
 ```
 
 Hardware requirements:
 
-- 18 digital pins
-- 4 analog pins
-- Serial
+- 30 digital pins
+- 5 analog pins
+- Serial0 for debug
+- Serial1 for MIDI
 
-Schematic with MIDI on Serial1 (teensy 4.0):
+Schematic with MIDI on Serial1 (teensy 4.1):
 
 - all buttons/switches are NO
 
-![ ](/schematic/v1.png)
-
-If using USB Serial (D-/D+) for MIDI, omit the MIDI connector.
+![ ](/schematic/v2.png)
 
 ## MIDI Pitch Definitions
 
@@ -82,6 +90,8 @@ Pitch designations for note keys:
   - [x] arduino
 - [x] misc buttons and knobs for extra MIDI configs
 - [x] update current key state if octave is pressed while sustained
+- [x] 24 keys
+- [x] linear slide for track vol
 
 ## Example Output
 
@@ -90,7 +100,7 @@ Each pitch value and signal are updated together:
 - Keys: [MIDI pitch, on signal]
 - Octs: [0 Up/1 Down, on signal]
 
-```
+```sh
 Streaming...
 4201052         KEYS: [36, 0]   [37, 0] [38, 0] [39, 0] [40, 0] [41, 0] [42, 0] [43, 0] [44, 0] [45, 0] [46, 0] [47, 0]         OCTS: [0, 0]    [1, 0]
 4211052         KEYS: [36, 0]   [37, 0] [38, 0] [39, 0] [40, 0] [41, 0] [42, 0] [43, 0] [44, 0] [45, 0] [46, 0] [47, 0]         OCTS: [0, 0]    [1, 0]

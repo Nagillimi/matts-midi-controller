@@ -42,15 +42,36 @@
  *  7 | 108 109 110 111 112 113 114 115 116 117 118 119
  *  8 | 120 121 122 123 124 125 126 127                  (<- ignored since partial)
  */
-#define MIDDLE_C 24
-#define MAX_OCTAVE_SETTING 7
-#define MIN_OCTAVE_SETTING -2
+#define FIRST_C 24
+
+/**
+ * @brief Max octave shift, on a 24 key range starting from pitch 24
+ */
+#define MAX_OCTAVE_SETTING 3
+
+/**
+ * @brief Min octave shift, on a 24 key range starting from pitch 24
+ */
+#define MIN_OCTAVE_SETTING -1
+
+/**
+ * @brief Number of possible octave shifts available
+ * 
+ * Convenience constant, don't edit.
+ */
+#define RANGE_OCTAVES MAX_OCTAVE_SETTING - MIN_OCTAVE_SETTING
 
 /**
  * @brief Analog threhold, [0, 1023] ADC
  */
 #define POT_STILL_TH 10
 
+/**
+ * @brief Value from 0 to 1 that controls the amount of easing
+ * 
+ * increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive
+ * but doing so may cause more noise to seep through if sleep is not enabled
+ */
 #define POT_SNAP_MULTIPLIER 0.01
 
 /**
